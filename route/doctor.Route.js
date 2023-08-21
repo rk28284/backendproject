@@ -77,6 +77,46 @@ doctorRouter.delete("/delete/:id",authentication, async (req, res) => {
   }
 });
 
+doctorRouter.get("/filter", async (req, res) => {
+  try {
+    const query = req.query.value;
+    const store = query.toLowerCase();
+    const filterData = await doctorModel.find({ Specialization: store });
+    res.json(filterData);
+  } catch (error) {
+    res.status(500).json({ message: "something goes wrong", error: error.message });
+  }
+});
+
+doctorRouter.get("/sort",async(req,res)=>{
+  try {
+    const query = req.query.value;
+    if(query=="asc"){
+      let sortData=await doctorModel.find().sort({date:1})
+      res.json(sortData)
+      
+    }else if(query=="desc"){
+      let sortData=await doctorModel.find().sort({date:-1})
+      res.json(sortData)
+    }
+  } catch (error) {
+    res.status(500).json({ message: "something goes wrong", error: error.message });
+  }
+})
+
+
+doctorRouter.get("/search",async(req,res)=>{
+  try {
+    const query = req.query.value;
+    const store = query.toLowerCase();
+    console.log(query,store);
+
+   let searchData=await doctorModel.find({name:store})
+   res.json(searchData)
+  } catch (error) {
+    res.status(500).json({ message: "something goes wrong", error: error.message });
+  }
+})
 module.exports = {
   doctorRouter,
 };
